@@ -75,7 +75,7 @@ View(NYC_Transit_Subway_Entrance_And_Exit_Data)
 
 ```{r}
 transit_df =
-  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")%>%
+  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",)%>%
   janitor::clean_names()%>%
   select(line:entry, vending, ada)%>%
   mutate(entry= ifelse (entry== "yes", TRUE, FALSE))
@@ -106,8 +106,8 @@ transit_no_vend=
 Reformat data so that route number and route name are distinct variables. How many distinct stations serve the A train? Of the stations that serve the A train, how many are ADA compliant?
 
 ```{r long}
-Transit_sub_a=
-  Transit_tidy %>%
+Transit_df_long=
+  Transit_df_tidy %>%
   distinct(line, station_name, keep_all = TRUE)%>%
   filter (route_number == "A")%>%
   count()
@@ -134,11 +134,11 @@ tibble(
 
 ```{r}
 pols_df= 
-  read_csv("./data/fivethirtyeight_datasets/pols-month.csv")%>%
+  read_csv("./data/fivethirtyeight_datasets/pols-month.csv", col_types = "ccddiiii")%>%
 janitor::clean_names()%>%
   separate(mon, sep = "-", into = c("year", "month", "day"))%>%
   
-  mutate(year = as.integer(year),
+  mutate(pols_df_selected_cols, year = as.integer(year),
   month = as.integer(month),
     president=
       ifelse(prez_dem == 1,
@@ -154,7 +154,7 @@ pols_cleaned=
 
 ```{r}
 snp_df= 
-  read_csv("./data/fivethirtyeight_datasets/snp.csv")%>%
+  read_csv("./data/fivethirtyeight_datasets/snp.csv", col_types = "ccddiiii")%>%
 janitor::clean_names()%>%
   separate(sep = "-", into = c("year", "month", "day"))%>%
   
@@ -164,16 +164,14 @@ janitor::clean_names()%>%
 
 ```{r}
 snp_df=
-  read_csv("./data/fivethirtyeight_datasets/snp.csv")%>%
+  read_csv("./data/fivethirtyeight_datasets/snp.csv", col_types = "ccddiiii")%>%
   janitor::clean_names()%>%
   seperate("date", c("month", "day", "year"), sep="/")%>%
   tibble(
   month_name=month.name)%>%
   mutate(month = as.character(month))
   
-  
-  month= 1:12
-  month_name=month.name
-)%>%
-  mutate(month = as.character(month))
+
 ```
+
+The pols_month data frame contains data on the politicians that were democratic or republican from 1947-2015; dates (year/month); there were 1,644 rows and 9 columns
